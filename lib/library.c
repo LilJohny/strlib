@@ -50,6 +50,16 @@ int my_str_pushback(my_str* str, char c){
     return 0;
 }
 
+int my_str_popback(my_str* str){
+    if (str == NULL){
+        return -1;
+    }
+    if (str->capacity_m == 0){
+        return -2;
+    }
+    return *(str->data+str->size_m-1)
+}
+
 void hello(void) {
     printf("Hello, World!\n");
 }
