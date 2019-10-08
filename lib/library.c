@@ -30,6 +30,26 @@ size_t my_str_size(const my_str* str){
     return str->size_m;
 }
 
+int my_str_putc(my_str* str, size_t index, char c){
+    if (str->size_m >= index){
+        return -1;
+    } else{
+        str->*(data + index) = c;
+        return 0;
+    }
+}
+
+int my_str_pushback(my_str* str, char c){
+    if (str == NULL){
+        return -1;
+    }
+    if (str->capacity_m == str->size_m){
+        return -2;
+    }
+    str->*(data + str->size_m) = c;
+    return 0;
+}
+
 void hello(void) {
     printf("Hello, World!\n");
 }
