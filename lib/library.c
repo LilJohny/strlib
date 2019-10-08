@@ -9,7 +9,7 @@ struct string{
 };
 
 int string_create(string* str, size_t buf_size){
-    str->data = (char *) malloc(15);
+    str->data = (char *) malloc(buf_size);
     if (str->data)
         return 0;
     else
