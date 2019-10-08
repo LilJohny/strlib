@@ -11,15 +11,15 @@ struct my_str{
 int my_str_create(my_str* str, size_t buf_size){
     str->capacity_m = buf_size * 2;
     str->size_m = buf_size;
-    str->data = (char *) malloc(buf_size*2);
-    if (str->data)
+    char* memory = (char *) malloc(buf_size*2);
+    if (memory){
+        str->data = memory;
         return 0;
-    else
+    } else
         return -2;
 }
 void my_str_clear(my_str* str){
     str->size_m = 0;
-
 }
 
 void my_str_free(my_str* str){
@@ -28,3 +28,13 @@ void my_str_free(my_str* str){
     free(str->data);
 }
 
+int my_str_shrink_to_fit(my_str* str){
+    char * memory = realloc(str->data, str->size_m);
+    if (memory){
+        str->data = memory;
+        str->capacity_m = str->size_m;
+        return 0;
+    } else {
+        return -2;
+    }
+}
