@@ -8,7 +8,7 @@ struct my_str{
     char* data;
 };
 
-int string_create(my_str* str, size_t buf_size){
+int my_str_create(my_str* str, size_t buf_size){
     str->data = (char *) malloc(buf_size);
     if (str->data)
         return 0;
