@@ -18,6 +18,10 @@ int my_str_create(my_str* str, size_t buf_size){
         return -2;
 }
 
+int my_str_empty(const my_str* str){
+    return str->size_m == 0;
+}
+
 void hello(void) {
     printf("Hello, World!\n");
 }
