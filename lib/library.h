@@ -30,7 +30,7 @@ int my_str_insert(my_str* str, const my_str* from, size_t pos);
 int my_str_insert_c(my_str* str, char c, size_t pos);
 void my_str_clear(my_str* str);
 int my_str_copy(const my_str* from,  my_str* to, int reserve);
-int my_str_popback(my_str* str);
+int my_str_popback(my_str* str); //Done
 int my_str_pushback(my_str* str, char c); //Done
 const char* my_str_get_cstr(my_str* str);
 int my_str_putc(my_str* str, size_t index, char c); //Done
