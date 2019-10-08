@@ -9,6 +9,8 @@ struct my_str{
 };
 
 int my_str_create(my_str* str, size_t buf_size){
+    str->capacity_m = buf_size;
+    str->size_m = 0;
     str->data = (char *) malloc(buf_size);
     if (str->data)
         return 0;
