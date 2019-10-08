@@ -50,6 +50,13 @@ int my_str_pushback(my_str* str, char c){
     return 0;
 }
 
+void my_str_free(my_str* str){
+    str->size_m = 0;
+    str->capacity_m = 0;
+    free(str->data);
+}
+
+
 int my_str_popback(my_str* str){
     if (str == NULL){
         return -1;
