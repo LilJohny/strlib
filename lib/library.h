@@ -31,16 +31,16 @@ int my_str_insert_c(my_str* str, char c, size_t pos);
 void my_str_clear(my_str* str);
 int my_str_copy(const my_str* from,  my_str* to, int reserve);
 int my_str_popback(my_str* str);
-int my_str_pushback(my_str* str, char c);
+int my_str_pushback(my_str* str, char c); //Done
 const char* my_str_get_cstr(my_str* str);
-int my_str_putc(my_str* str, size_t index, char c);
-int my_str_getc(const my_str* str, size_t index);
+int my_str_putc(my_str* str, size_t index, char c); //Done
+int my_str_getc(const my_str* str, size_t index); //Done
 int my_str_empty(const my_str* str); // Done
 size_t my_str_capacity(const my_str* str); //Done
 size_t my_str_size(const my_str* str); //Done
 int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size);
-void my_str_free(my_str* str);
-int my_str_create(my_str* str, size_t buf_size);
+void my_str_free(my_str* str); //Done
+int my_str_create(my_str* str, size_t buf_size); //Done
 
 
 
