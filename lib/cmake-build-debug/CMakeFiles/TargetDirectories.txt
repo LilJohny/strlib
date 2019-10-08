@@ -1,3 +1,0 @@
-/home/denis/CLionProjects/strlib/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/denis/CLionProjects/strlib/cmake-build-debug/CMakeFiles/strlib.dir
-/home/denis/CLionProjects/strlib/cmake-build-debug/CMakeFiles/edit_cache.dir

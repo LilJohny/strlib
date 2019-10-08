@@ -17,11 +17,14 @@ int my_str_create(my_str* str, size_t buf_size){
     else
         return -2;
 }
+void my_str_clear(my_str* str){
+    str->size_m = 0;
 
-int my_str_empty(const my_str* str){
-    return str->size_m == 0;
 }
 
-void hello(void) {
-    printf("Hello, World!\n");
+void my_str_free(my_str* str){
+    str->size_m = 0;
+    str->capacity_m = 0;
+    free(str->data);
 }
+
