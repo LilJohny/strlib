@@ -22,6 +22,14 @@ int my_str_empty(const my_str* str){
     return str->size_m == 0;
 }
 
+size_t my_str_capacity(const my_str* str){
+    return str->capacity_m;
+}
+
+size_t my_str_size(const my_str* str){
+    return str->size_m;
+}
+
 void hello(void) {
     printf("Hello, World!\n");
 }
