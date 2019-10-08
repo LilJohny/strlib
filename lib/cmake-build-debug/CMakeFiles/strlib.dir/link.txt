@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g  -shared -Wl,-soname,libstrlib.so -o libstrlib.so CMakeFiles/strlib.dir/library.c.o 
