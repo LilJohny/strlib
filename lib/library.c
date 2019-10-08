@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct string{
+struct my_str{
     size_t capacity_m;
     size_t size_m;
     char* data;
 };
 
-int string_create(string* str, size_t buf_size){
+int string_create(my_str* str, size_t buf_size){
     str->data = (char *) malloc(buf_size);
     if (str->data)
         return 0;
