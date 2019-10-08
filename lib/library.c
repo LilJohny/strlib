@@ -10,7 +10,10 @@ struct string{
 
 int my_str_create(string* str, size_t buf_size){
     str->data = (char *) malloc(15);
-    return 0;
+    if (str->data)
+        return 0;
+    else
+        return -2;
 }
 
 void hello(void) {
