@@ -68,15 +68,24 @@ int my_str_popback(my_str* str){
     return *(str->data+str->size_m-1)
 }
 
-//int my_str_copy(const my_str* from,  my_str* to, int reserve){
-//    if (from == NULL){
-//        return -1;
-//    }
-//    if my_str_empty(from){
-//        return -2;
-//    }
-//
-//}
+int my_str_copy(const my_str* from,  my_str* to, int reserve){
+    if (from == NULL){
+        return -1;
+    }
+    if (my_str_empty(from)){
+        return -2;
+    }
+    size_t from_len = from->size_m;
+    if (reserve){
+        my_str_create(to, from_len, from_len*2);
+    } else{
+        my_str_create(to, from_len, from_len);
+    }
+    for(int i = 0; i < from_len; i++){
+        to->*(data + i) = from->*(data + i);
+    }
+    return 0;
+}
 
 void hello(void) {
     printf("Hello, World!\n");
