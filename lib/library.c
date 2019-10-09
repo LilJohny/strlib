@@ -36,7 +36,7 @@ int my_str_putc(my_str* str, size_t index, char c){
     if (str->size_m >= index){
         return -1;
     } else{
-        str->*(data + index) = c;
+        *(str->data + index) = c;
         return 0;
     }
 }
@@ -48,7 +48,7 @@ int my_str_pushback(my_str* str, char c){
     if (str->capacity_m == str->size_m){
         return -2;
     }
-    str->*(data + str->size_m) = c;
+    *(str->data + str->size_m) = c;
     return 0;
 }
 
@@ -65,7 +65,7 @@ int my_str_popback(my_str* str){
     if (str->capacity_m == 0){
         return -2;
     }
-    return *(str->data+str->size_m-1)
+    return *(str->data + str->size_m - 1)
 }
 
 int my_str_copy(const my_str* from,  my_str* to, int reserve){
@@ -82,9 +82,23 @@ int my_str_copy(const my_str* from,  my_str* to, int reserve){
         my_str_create(to, from_len, from_len);
     }
     for(int i = 0; i < from_len; i++){
-        to->*(data + i) = from->*(data + i);
+        *(to->data + i) = *(from->data + i);
     }
     return 0;
+}
+
+int my_str_insert_c(my_str* str, char c, size_t pos){
+    if (str->capacity_m > str->size_m){
+        size_t str_len = str->size_m;
+        do{
+            if (pos <= str->size_m ){
+                char next = *(str->data + pos);
+            }
+            *(str->data + pos) = c;
+            c = next;
+            pos++;
+        }while(pos <= str_len);
+    }
 }
 
 void hello(void) {
