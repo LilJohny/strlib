@@ -19,7 +19,9 @@ int my_str_create(my_str* str, size_t buf_size){
 }
 
 int my_str_empty(const my_str* str){
-    return str->size_m == 0;
+    if(str->size_m == 0)
+        return 1;
+    return 0;
 }
 
 size_t my_str_capacity(const my_str* str){
@@ -56,7 +58,6 @@ void my_str_free(my_str* str){
     free(str->data);
 }
 
-
 int my_str_popback(my_str* str){
     if (str == NULL){
         return -1;
@@ -66,6 +67,16 @@ int my_str_popback(my_str* str){
     }
     return *(str->data+str->size_m-1)
 }
+
+//int my_str_copy(const my_str* from,  my_str* to, int reserve){
+//    if (from == NULL){
+//        return -1;
+//    }
+//    if my_str_empty(from){
+//        return -2;
+//    }
+//
+//}
 
 void hello(void) {
     printf("Hello, World!\n");
