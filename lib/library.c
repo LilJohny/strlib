@@ -9,7 +9,7 @@ struct my_str{
 };
 
 int my_str_create(my_str* str, size_t buf_size){
-    str->capacity_m = buf_size * 2;
+    str->capacity_m = buf_size * 2 + 1;
     str->size_m = buf_size;
     str->data = (char *) malloc(buf_size*2);
     if (str->data)
@@ -88,18 +88,30 @@ int my_str_copy(const my_str* from,  my_str* to, int reserve){
 }
 
 int my_str_insert_c(my_str* str, char c, size_t pos){
-    if (str->capacity_m > str->size_m){
-        size_t str_len = str->size_m;
-        do{
-            if (pos <= str->size_m ){
-                char next = *(str->data + pos);
-            }
-            *(str->data + pos) = c;
-            c = next;
-            pos++;
-        }while(pos <= str_len);
+    if (str->capacity_m <= str->size_m){
+
     }
+    size_t str_len = str->size_m;
+    do{
+        if (pos <= str->size_m ){
+            char next = *(str->data + pos);
+        }
+        *(str->data + pos) = c;
+        c = next;
+        pos++;
+    }while(pos <= str_len);
+    return 0;
 }
+
+//int my_str_append(my_str* str, const my_str* from){
+//    if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)){
+//        for(int i = 0; i < my_str_size(from); i++){
+//            *(str->data + my_str_size(str) + i) = *(from->data + i);
+//        }
+//    } else{
+//        return -1;
+//    }
+//}
 
 void hello(void) {
     printf("Hello, World!\n");
