@@ -9,9 +9,9 @@ struct my_str{
 };
 
 int my_str_create(my_str* str, size_t buf_size){
-    str->capacity_m = buf_size * 2 + 1;
+    str->capacity_m = buf_size * 2;
     str->size_m = buf_size;
-    str->data = (char *) malloc(buf_size*2);
+    str->data = (char *) malloc(buf_size * 2 + 1);
     if (str->data)
         return 0;
     else
