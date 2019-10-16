@@ -38,3 +38,21 @@ int my_str_shrink_to_fit(my_str* str){
         return -2;
     }
 }
+int my_str_write_file(const my_str* str, FILE* file){
+    for (int i = 0; i < str->size_m; ++i) {
+        int result = fprintf(file, (const char *) (str->data + i));
+        if(result!=1){
+            return result;
+        }
+    }
+    return 0;
+}
+int my_str_write(const my_str* str, FILE* file){
+    for (int i = 0; i < str->size_m; ++i) {
+        int result = printf( (const char *) (str->data + i));
+        if(result!=1){
+            return result;
+        }
+    }
+    return 0;
+}
