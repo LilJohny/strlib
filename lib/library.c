@@ -100,12 +100,12 @@ void *my_realloc(void *ptr, size_t oldLength, size_t newLength){
 
 
 
-int my_str_resize(my_str* str, size_t new_size, char sym) {
+int my_str_resize(my_str* str, size_t new_size, char sym) {//TODO check exceptions
     char *newMemory = my_realloc(str->data, str->capacity_m, new_size);
 
     if (newMemory) {
         str->data = newMemory;
-        for (int i = str->capacity_m; i < new_size; i++) {
+        for (size_t i = str->capacity_m; i < new_size; i++) {
             *(str->data + i) = sym;
         }
         str->capacity_m = new_size;
@@ -114,7 +114,23 @@ int my_str_resize(my_str* str, size_t new_size, char sym) {
         return -2;
     }
 }
+int my_str_append_cstr(my_str* str, const char* from){
+    int fromLength = sizeof(from)/ sizeof(*from);
+    int startPoint = str->size_m;
+    if (str->size_m+ fromLength >=str->capacity_m){
+        int result = my_str_resize(str,str->size_m+ fromLength,' ' );
+        if (result!=0){
+            return result;
+        }
+    }
+    int j = 0;
+    for (size_t i = startPoint; i < str->size_m+fromLength; ++i) {
+        str->data[j] = from[j];
+        j++;
+    }
+    return 0;
 
+}
 int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     if (beg > from->size_m) {
         return -1;
