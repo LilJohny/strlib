@@ -87,9 +87,13 @@ int my_str_copy(const my_str* from,  my_str* to, int reserve){
     return 0;
 }
 
+int my_str_resize(){
+
+}
+
 int my_str_insert_c(my_str* str, char c, size_t pos){
     if (str->capacity_m <= str->size_m){
-
+        my_str_reserve(str, str->capacity_m * 2);
     }
     size_t str_len = str->size_m;
     do{
