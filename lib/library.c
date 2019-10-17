@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 struct my_str {
     size_t capacity_m;
     size_t size_m;
@@ -80,27 +81,26 @@ int my_str_write(const my_str *str, FILE *file) {
     return 0;
 }
 
-void *my_realloc(void *ptr, size_t oldLength, size_t newLength){
-    if (newLength == 0){
+void *my_realloc(void *ptr, size_t oldLength, size_t newLength) {
+    if (newLength == 0) {
         free(ptr);
         return NULL;
-    } else if (! ptr){
+    } else if (!ptr) {
         return malloc(newLength);
-    } else if (newLength > oldLength ){
-        void * ptrNew = malloc(newLength);
-        if (ptrNew){
+    } else if (newLength > oldLength) {
+        void *ptrNew = malloc(newLength);
+        if (ptrNew) {
             memcpy(ptrNew, ptr, oldLength);
             free(ptr);
         }
         return ptrNew;
-    } else{
+    } else {
         return ptr;
     }
 }
 
 
-
-int my_str_resize(my_str* str, size_t new_size, char sym) {//TODO check exceptions
+int my_str_resize(my_str *str, size_t new_size, char sym) {//TODO check exceptions
     char *newMemory = my_realloc(str->data, str->capacity_m, new_size);
 
     if (newMemory) {
@@ -114,23 +114,25 @@ int my_str_resize(my_str* str, size_t new_size, char sym) {//TODO check exceptio
         return -2;
     }
 }
-int my_str_append_cstr(my_str* str, const char* from){
-    int fromLength = sizeof(from)/ sizeof(*from);
+
+int my_str_append_cstr(my_str *str, const char *from) {
+    int fromLength = sizeof(from) / sizeof(*from);
     int startPoint = str->size_m;
-    if (str->size_m+ fromLength >=str->capacity_m){
-        int result = my_str_resize(str,str->size_m+ fromLength,' ' );
-        if (result!=0){
+    if (str->size_m + fromLength >= str->capacity_m) {
+        int result = my_str_resize(str, str->size_m + fromLength, ' ');
+        if (result != 0) {
             return result;
         }
     }
     int j = 0;
-    for (size_t i = startPoint; i < str->size_m+fromLength; ++i) {
+    for (size_t i = startPoint; i < str->size_m + fromLength; ++i) {
         str->data[j] = from[j];
         j++;
     }
     return 0;
 
 }
+
 int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     if (beg > from->size_m) {
         return -1;
@@ -138,7 +140,7 @@ int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     if (end > from->size_m) {
         end = from->size_m;
     }
-    
+
     int j = 0;
     for (size_t i = 0; i < end; ++i) {
         *(to->data + j) = *(from->data + i);
@@ -146,3 +148,21 @@ int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     }
     return 0;
 }
+
+int my_str_read(my_str *str) {
+    char sym = '\0';
+    int i = 0;
+    while (sym != '\n') {
+        sym = (char) getchar();
+        if (str->size_m == str->capacity_m) {
+            my_str_resize(str, str->capacity_m * 2, '\0');
+        }
+        str->data[i] = sym;
+        i++;
+    }
+    return 0;
+}
+
+
+
+
