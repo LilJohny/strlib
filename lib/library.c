@@ -162,27 +162,31 @@ int my_str_read(my_str *str) {
     }
     return 0;
 }
-int my_str_read_file(my_str* str, FILE* file){
+
+int my_str_read_file(my_str *str, FILE *file) {
+    return my_str_read_file(str, file, '\n');
+}
+
+const char *my_str_get_cstr(my_str *str) {
+    char *c_str = str->data;
+    return c_str
+}
+
+
+int my_str_read_file_delim(my_str_t *str, FILE *file, char delimiter) {
     char sym = '\0';
     int i = 0;
-    while (sym != '\n') {
-        sym = (char)fgetc(file);
+    while (sym != delimiter) {
+        sym = (char) fgetc(file);
         if (str->size_m == str->capacity_m) {
             my_str_resize(str, str->capacity_m * 2, '\0');
         }
         str->data[i] = sym;
         i++;
     }
-    if(!ferror(file)) {
+    if (!ferror(file)) {
         return 0;
     } else {
         return -1;
     }
 }
-
-const char* my_str_get_cstr(my_str* str){
-    char* c_str = str->data;
-    return c_str
-}
-
-
