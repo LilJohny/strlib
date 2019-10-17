@@ -1,6 +1,7 @@
 #include "library.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct my_str{
     size_t capacity_m;
@@ -75,7 +76,29 @@ int my_str_cmp(const my_str* str1, const my_str* str2) {
     else if (str1->size_m > str2->size_m) { return 1; }
     else { return 0; }
 }
-/**
-int my_str_cmp_cstr(const my_str* str1, const char* cstr2) {
 
-}**/
+//Are the commented lines mistakes or am I wrong?
+int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
+    size_t cstr_len = sizeof(cstr);
+    if (buf_size == 0) {                             //should reserve size of Cstring not buf_size
+        int created = my_str_reserve(str, buf_size); //int created = my_str_reserve(str, cstr_len);??????
+        if (created == -2) {
+            return -2;
+        }
+    }
+    if (0 < buf_size && buf_size < cstr_len) {
+        return -1;
+    }
+    for (int i = 0; i < cstr_len; i++) {
+        str->data[i] = cstr[i];                      //*(str->data+i) = cstr[i]??????
+    }
+    return 0;
+}
+
+
+int my_str_cmp_cstr(const my_str* str1, const char* cstr2) {
+    my_str* str2;
+    int converted = my_str_from_cstr(str2, cstr2, sizeof(cstr2));
+    int result = my_str_cmp(str1, str2);
+    return result;
+}
