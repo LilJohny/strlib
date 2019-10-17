@@ -28,3 +28,29 @@ int my_str_resize(my_str* str, size_t new_size, char sym){
         return -2;
     }
 }
+
+size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from){
+    int foundChars = 0;
+    size_t strIndx = 0;
+    size_t tofindIndx = 0;
+    size_t startIndx = -1;
+
+    while (foundChars != tofind->size_m || strIndx == str->size_m) {
+
+        if (str->data[strIndx] == tofind->data[tofindIndx]) {
+            if (str->data[strIndx] == tofind->data[0]) {
+                startIndx = strIndx;
+            }
+            foundChars++;
+            tofindIndx++;
+            strIndx++;
+        }
+
+        else {
+            startIndx = -1
+            strIndx++;
+            foundChars = 0;
+            tofindIndx = 0;
+        }
+    }
+}
