@@ -173,7 +173,16 @@ int my_str_read_file(my_str* str, FILE* file){
         str->data[i] = sym;
         i++;
     }
+    if(!ferror(file)) {
+        return 0;
+    } else {
+        return -1;
+    }
 }
 
+const char* my_str_get_cstr(my_str* str){
+    char* c_str = str->data;
+    return c_str
+}
 
 
