@@ -22,18 +22,32 @@ int my_str_getc(const my_str* str, size_t index){
     return *(str->data+index);
 }
 
-int my_str_resize(my_str* str, size_t new_size, char sym){
-    char* newMemory = realloc(str->data, new_size);
+int my_str_resize(my_str* str, size_t new_size, char sym) {
+    char *newMemory = realloc(str->data, new_size);
 
     if (newMemory) {
         str->data = newMemory;
-        for (int i = str->capacity_m; i < new_size; i++){
-            *(str->data+i) = sym;
+        for (int i = str->capacity_m; i < new_size; i++) {
+            *(str->data + i) = sym;
         }
         str->capacity_m = new_size;
         return 0;
-    }
-    else {
+    } else {
         return -2;
     }
+}
+
+size_t my_str_find_c(const my_str* str, char tofind, size_t from){
+    if(from >= str->size_m) {
+        for (size_t i = from; i < str->size_m; i++) {
+            if (str->data[i] == tofind) {
+                return i;
+            }
+        }
+    }
+    return (size_t)(-1);
+}
+
+void hello(void) {
+    printf("Hello, World!\n");
 }

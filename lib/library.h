@@ -14,11 +14,11 @@ typedef struct
 //int my_str_read(my_str* str);
 //int my_str_read_file(my_str* str, FILE* file);
 //size_t my_str_find_if(const my_str* str, int (*predicat)(int));
-//size_t my_str_find_c(const my_str* str, char tofind, size_t from);
+size_t my_str_find_c(const my_str* str, char tofind, size_t from);
 //int my_str_cmp_cstr(const my_str* str1, const char* cstr2);
 //int my_str_cmp(const my_str* str1, const my_str* str2);
 //size_t my_str_find(const my_str* str, const my_str* tofind, size_t from);
-int my_str_resize(my_str* str, size_t new_size, char sym);
+int my_str_resize(my_str* str, size_t new_size, char sym); // Done
 //int my_str_shrink_to_fit(my_str* str);
 //int my_str_reserve(my_str* str, size_t buf_size);
 //int my_str_substr_cstr(const my_str* from, char* to, size_t beg, size_t end);
@@ -34,7 +34,7 @@ int my_str_resize(my_str* str, size_t new_size, char sym);
 //int my_str_pushback(my_str* str, char c);
 //const char* my_str_get_cstr(my_str* str);
 //int my_str_putc(my_str* str, size_t index, char c);
-int my_str_getc(const my_str* str, size_t index);
+int my_str_getc(const my_str* str, size_t index); // Done
 //int my_str_empty(const my_str* str); // Done
 //size_t my_str_capacity(const my_str* str); // Done
 //size_t my_str_size(const my_str* str); // Done
