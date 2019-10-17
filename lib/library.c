@@ -22,6 +22,17 @@ int my_str_empty(const my_str* str){
     return str->size_m == 0;
 }
 
+size_t my_str_find_c(const my_str* str, char tofind, size_t from){
+    if(from >= str->size_m) {
+        for (size_t i = from; i < str->size_m; i++) {
+            if (str->data[i] == tofind) {
+                return i;
+            }
+        }
+    }
+    return (size_t)(-1);
+}
+
 void hello(void) {
     printf("Hello, World!\n");
 }

@@ -14,7 +14,7 @@ int my_str_write_file(const my_str* str, FILE* file);
 int my_str_read(my_str* str);
 int my_str_read_file(my_str* str, FILE* file);
 size_t my_str_find_if(const my_str* str, int (*predicat)(int));
-size_t my_str_find_c(const my_str* str, char tofind, size_t from);
+size_t my_str_find_c(const my_str* str, char tofind, size_t from); // Done
 int my_str_cmp_cstr(const my_str* str1, const char* cstr2);
 int my_str_cmp(const my_str* str1, const my_str* str2);
 size_t my_str_find(const my_str* str, const my_str* tofind, size_t from);
