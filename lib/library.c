@@ -190,7 +190,7 @@ int my_str_append_cstr(my_str *str, const char *from) {
 }
 
 int my_str_insert_c(my_str* str, char c, size_t pos){
-    size_t needed_capacity = str->size_m < pos ? str->size_m : pos;
+    size_t needed_capacity = str->size_m > pos ? str->size_m : pos;
     if (pos <= str->size_m) {
         my_str_reserve(str, needed_capacity * 2);
     } else {
