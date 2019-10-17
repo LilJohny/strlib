@@ -190,3 +190,13 @@ int my_str_read_file_delim(my_str_t *str, FILE *file, char delimiter) {
         return -1;
     }
 }
+int my_str_reserve(my_str* str, size_t buf_size){
+    if (buf_size>str->capacity_m){
+        char* ptrNew = my_realloc(str->data, str->capacity_m, buf_size);
+        if (ptrNew!=str->data){
+            str->data = ptrNew;
+        } else {
+            return -1;
+        }
+    }
+}
