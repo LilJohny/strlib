@@ -55,10 +55,8 @@ size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from){
     }
     return startIndx;
 }
-//! Порівняти стрічки, повернути 0, якщо рівні (за вмістом!)
-//! -1 (або інше від'ємне значення), якщо перша менша,
-//! 1 (або інше додатне значення) -- якщо друга.
-//! Поведінка має бути такою ж, як в strcmp.
+
+
 int my_str_cmp(const my_str* str1, const my_str* str2) {
 
     size_t indx = 0;
@@ -77,3 +75,7 @@ int my_str_cmp(const my_str* str1, const my_str* str2) {
     else if (str1->size_m > str2->size_m) { return 1; }
     else { return 0; }
 }
+/**
+int my_str_cmp_cstr(const my_str* str1, const char* cstr2) {
+
+}**/
