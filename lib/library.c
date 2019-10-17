@@ -110,6 +110,20 @@ int my_str_insert_c(my_str* str, char c, size_t pos){
     return 0;
 }
 
+//int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
+//    size_t cstr_len = sizeof(cstr);
+//    if (buf_size == 0) {
+//        int created = my_str_reserve(str, buf_size);
+//        if (created == -2) {
+//            return -2;
+//        }
+//    }
+//    if (0 < buf_size && buf_size < cstr_len) {
+//        return -1;
+//    }
+//
+//}
+
 //int my_str_append(my_str* str, const my_str* from){
 //    if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)){
 //        for(int i = 0; i < my_str_size(from); i++){
