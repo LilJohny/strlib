@@ -47,10 +47,11 @@ size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from){
         }
 
         else {
-            startIndx = -1
+            startIndx = -1;
             strIndx++;
             foundChars = 0;
             tofindIndx = 0;
         }
     }
+    return startIndx;
 }
