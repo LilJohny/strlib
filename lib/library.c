@@ -189,6 +189,24 @@ int my_str_append_cstr(my_str *str, const char *from) {
 
 }
 
+int my_str_insert_c(my_str* str, char c, size_t pos){
+    size_t needed_capacity = str->size_m > pos ? str->size_m : pos;
+    if (pos <= str->size_m) {
+        my_str_reserve(str, needed_capacity * 2);
+    } else {
+        my_str_resize(str, needed_capacity * 2, c);
+        return 0;
+    }
+    while (pos <= str->size_m) {
+        if (pos <= str->size_m ){
+            char next = *(str->data + pos);
+        }
+        *(str->data + pos) = c;
+        c = next;
+        pos++;
+    }
+}
+
 int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     if (beg > from->size_m) {
         return -1;
@@ -219,6 +237,32 @@ int my_str_read(my_str *str) {
     return 0;
 }
 
+int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
+    size_t cstr_len = sizeof(cstr);
+    if (buf_size == 0) {
+        int created = my_str_reserve(str, buf_size);
+        if (created == -2) {
+            return -2;
+        }
+    }
+    if (0 < buf_size && buf_size < cstr_len) {
+        return -1;
+    }
+    for (int i = 0; i < cstr_len; i++) {
+        str->data[i] = cstr[i];
+    }
+    return 0;
+}
+
+//int my_str_append(my_str* str, const my_str* from){
+//    if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)){
+//        for(int i = 0; i < my_str_size(from); i++){
+//            *(str->data + my_str_size(str) + i) = *(from->data + i);
+//        }
+//    } else{
+//        return -1;
+//    }
+//}
 int my_str_read_file(my_str* str, FILE* file){
     char sym = '\0';
     int i = 0;
