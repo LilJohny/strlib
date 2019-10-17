@@ -21,7 +21,7 @@ int my_str_create(my_str *str, size_t buf_size) {
 }
 
 int my_str_getc(const my_str* str, size_t index){
-    return *(str->data+index);
+    return *(str->data[index]);
 }
 
 int my_str_shrink_to_fit(my_str *str) {
@@ -120,7 +120,7 @@ void my_str_clear(my_str *str) {
 
 int my_str_write_file(const my_str *str, FILE *file) {
     for (int i = 0; i < str->size_m; ++i) {
-        int result = fprintf(file, (const char *) (str->data + i));
+        int result = fprintf(file,"%c", str->data[i]);
         if (result != 1) {
             return result;
         }
@@ -130,7 +130,7 @@ int my_str_write_file(const my_str *str, FILE *file) {
 
 int my_str_write(const my_str *str, FILE *file) {
     for (int i = 0; i < str->size_m; ++i) {
-        int result = printf((const char *) (str->data + i));
+        int result = printf("%c", (str->data[i]));
         if (result != 1) {
             return result;
         }
