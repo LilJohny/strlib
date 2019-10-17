@@ -37,8 +37,8 @@ size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from){
 
     while (foundChars != tofind->size_m || strIndx == str->size_m) {
 
-        if (str->data[strIndx] == tofind->data[tofindIndx]) {
-            if (str->data[strIndx] == tofind->data[0]) {
+        if (*(str->data+strIndx) == *(tofind->data+tofindIndx)) {
+            if (*(str->data+strIndx) == *(tofind->data+0)) {
                 startIndx = strIndx;
             }
             foundChars++;
@@ -68,8 +68,8 @@ int my_str_cmp(const my_str* str1, const my_str* str2) {
     else { smallerLen = str2->size_m; }
 
     while (indx < smallerLen) {
-        if (str1->data[indx] < str2->data[indx]) { return -1; }
-        else if (str1->data[indx] > str2->data[indx]) { return 1; }
+        if (*(str1->data+indx) < *(str2->data+indx)) { return -1; }
+        else if (*(str1->data+indx) > *(str2->data+indx)) { return 1; }
         else { indx++; }
     }
 
