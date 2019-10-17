@@ -162,7 +162,18 @@ int my_str_read(my_str *str) {
     }
     return 0;
 }
-
+int my_str_read_file(my_str* str, FILE* file){
+    char sym = '\0';
+    int i = 0;
+    while (sym != '\n') {
+        sym = (char)fgetc(file);
+        if (str->size_m == str->capacity_m) {
+            my_str_resize(str, str->capacity_m * 2, '\0');
+        }
+        str->data[i] = sym;
+        i++;
+    }
+}
 
 
 
