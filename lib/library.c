@@ -92,18 +92,21 @@ int my_str_resize(){
 }
 
 int my_str_insert_c(my_str* str, char c, size_t pos){
-    if (str->capacity_m <= str->size_m){
-        my_str_reserve(str, str->capacity_m * 2);
+    size_t needed_capacity = str->size_m < pos ? str->size_m : pos;
+    if (pos <= str->size_m) {
+        my_str_reserve(str, needed_capacity * 2);
+    } else {
+        my_str_resize(str, needed_capacity * 2, c);
+        return 0;
     }
-    size_t str_len = str->size_m;
-    do{
+    while (pos <= str->size_m) {
         if (pos <= str->size_m ){
             char next = *(str->data + pos);
         }
         *(str->data + pos) = c;
         c = next;
         pos++;
-    }while(pos <= str_len);
+    }
     return 0;
 }
 
