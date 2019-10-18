@@ -388,3 +388,7 @@ int my_str_cmp_cstr(const my_str* str1, const char* cstr2) {
     int result = my_str_cmp(str1, str2);
     return result;
 }
+int my_str_insert(my_str* str, const my_str* from, size_t pos){
+    const char * from_c_char = my_str_get_cstr(from);
+    my_str_insert_cstr(str, from_c_char, pos);
+}
