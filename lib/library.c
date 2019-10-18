@@ -12,7 +12,7 @@ struct my_str {
 int my_str_create(my_str *str, size_t buf_size) {
     str->capacity_m = buf_size * 2;
     str->size_m = buf_size;
-    char *memory = (char *) malloc(buf_size * 2);
+    char *memory = (char *) malloc(buf_size * 2 + 1);
     if (memory) {
         str->data = memory;
         return 0;
@@ -20,14 +20,8 @@ int my_str_create(my_str *str, size_t buf_size) {
         return -2;
 }
 
-void my_str_clear(my_str *str) {
-    str->size_m = 0;
-}
-
-void my_str_free(my_str *str) {
-    str->size_m = 0;
-    str->capacity_m = 0;
-    free(str->data);
+int my_str_getc(const my_str* str, size_t index){
+    return *(str->data+index);
 }
 
 int my_str_shrink_to_fit(my_str *str) {
@@ -41,6 +35,89 @@ int my_str_shrink_to_fit(my_str *str) {
     }
 }
 
+size_t my_str_find_c(const my_str* str, char tofind, size_t from) {
+    if (from >= str->size_m) {
+        for (size_t i = from; i < str->size_m; i++) {
+            if (str->data[i] == tofind) {
+                return i;
+            }
+        }
+    }
+    return (size_t)(-1);
+}
+
+int my_str_empty(const my_str* str){
+    if(str->size_m == 0)
+        return 1;
+    return 0;
+}
+
+size_t my_str_capacity(const my_str* str){
+    return str->capacity_m;
+}
+
+size_t my_str_size(const my_str* str){
+    return str->size_m;
+}
+
+int my_str_putc(my_str* str, size_t index, char c){
+    if (str->size_m >= index){
+        return -1;
+    } else{
+        *(str->data + index) = c;
+        return 0;
+    }
+}
+
+int my_str_pushback(my_str* str, char c){
+    if (str == NULL){
+        return -1;
+    }
+    if (str->capacity_m == str->size_m){
+        return -2;
+    }
+    *(str->data + str->size_m) = c;
+    return 0;
+}
+
+void my_str_free(my_str* str){
+    str->size_m = 0;
+    str->capacity_m = 0;
+    free(str->data);
+}
+
+int my_str_popback(my_str* str){
+    if (str == NULL){
+        return -1;
+    }
+    if (str->capacity_m == 0){
+        return -2;
+    }
+    return *(str->data + str->size_m - 1);
+}
+
+int my_str_copy(const my_str* from,  my_str* to, int reserve) {
+    if (from == NULL) {
+        return -1;
+    }
+    if (my_str_empty(from)) {
+        return -2;
+    }
+    size_t from_len = from->size_m;
+    my_str_create(to, from_len);
+    if (!reserve) {
+        my_str_shrink_to_fit(to);
+    }
+    for (int i = 0; i < from_len; i++) {
+        *(to->data + i) = *(from->data + i);
+    }
+    return 0;
+}
+
+void my_str_clear(my_str *str) {
+    str->size_m = 0;
+}
+
 int my_str_write_file(const my_str *str, FILE *file) {
     for (int i = 0; i < str->size_m; ++i) {
         int result = fprintf(file, (const char *) (str->data + i));
@@ -50,26 +127,6 @@ int my_str_write_file(const my_str *str, FILE *file) {
     }
     return 0;
 }
-
-int my_str_copy(const my_str *from, my_str *to, int reserve) {
-    if (from == NULL) {
-        return -1;
-    }
-    if (my_str_empty(from)) {
-        return -2;
-    }
-    size_t from_len = from->size_m;
-    if (reserve) {
-        my_str_create(to, from_len);
-    } else {
-        my_str_create(to, from_len / 2);
-    }
-    for (size_t i = 0; i < from_len; i++) {
-        *(to->data + i) = *(from->data + i);
-    }
-    return 0;
-}
-
 
 int my_str_write(const my_str *str, FILE *file) {
     for (int i = 0; i < str->size_m; ++i) {
@@ -98,7 +155,6 @@ void *my_realloc(void *ptr, size_t oldLength, size_t newLength) {
         return ptr;
     }
 }
-
 
 int my_str_resize(my_str *str, size_t new_size, char sym) {//TODO check exceptions
     char *newMemory = my_realloc(str->data, str->capacity_m, new_size);
@@ -131,6 +187,24 @@ int my_str_append_cstr(my_str *str, const char *from) {
     }
     return 0;
 
+}
+
+int my_str_insert_c(my_str* str, char c, size_t pos){
+    size_t needed_capacity = str->size_m > pos ? str->size_m : pos;
+    if (pos <= str->size_m) {
+        my_str_reserve(str, needed_capacity * 2);
+    } else {
+        my_str_resize(str, needed_capacity * 2, c);
+        return 0;
+    }
+    while (pos <= str->size_m) {
+        if (pos <= str->size_m ){
+            char next = *(str->data + pos);
+        }
+        *(str->data + pos) = c;
+        c = next;
+        pos++;
+    }
 }
 
 int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
@@ -174,6 +248,38 @@ const char *my_str_get_cstr(my_str *str) {
 
 
 int my_str_read_file_delim(my_str_t *str, FILE *file, char delimiter) {
+
+int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
+    size_t cstr_len = sizeof(cstr);
+    if (buf_size == 0) {
+        int created = my_str_reserve(str, buf_size);
+        if (created == -2) {
+            return -2;
+        }
+    }
+    if (0 < buf_size && buf_size < cstr_len) {
+        return -1;
+    }
+    for (int i = 0; i < cstr_len; i++) {
+        str->data[i] = cstr[i];
+    }
+    return 0;
+}
+
+int my_str_append(my_str* str, const my_str* from){//TODO: Check my_str_reserve return on mistakes
+    if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)){
+        int reserved = my_str_reserve(str, my_str_size(from) + my_str_size(str));
+        if (reserved == -2){
+            return -2;
+        }
+    }
+}
+
+int my_str_reserve(my_str_t* str, size_t buf_size) {
+
+}
+
+int my_str_read_file(my_str* str, FILE* file){
     char sym = '\0';
     int i = 0;
     while (sym != delimiter) {
@@ -190,6 +296,10 @@ int my_str_read_file_delim(my_str_t *str, FILE *file, char delimiter) {
         return -1;
     }
 }
+
+const char* my_str_get_cstr(my_str* str){
+    char* c_str = str->data;
+    return c_str;
 int my_str_reserve(my_str* str, size_t buf_size){
     if (buf_size>str->capacity_m){
         char* ptrNew = my_realloc(str->data, str->capacity_m, buf_size);
