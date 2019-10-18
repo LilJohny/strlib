@@ -21,7 +21,7 @@ int my_str_create(my_str *str, size_t buf_size) {
 }
 
 int my_str_getc(const my_str* str, size_t index){
-    return *(str->data[index]);
+    return str->data[index];
 }
 
 int my_str_shrink_to_fit(my_str *str) {
@@ -278,11 +278,11 @@ const char *my_str_get_cstr(my_str *str) {
     return c_str;
 }
 
-
-int my_str_from_cstr(my_str *str, const char *cstr, size_t buf_size) {
+//Are the commented lines mistakes or am I wrong?
+int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
     size_t cstr_len = sizeof(cstr);
-    if (buf_size == 0) {
-        int created = my_str_reserve(str, buf_size);
+    if (buf_size == 0) {                             //should reserve size of Cstring not buf_size
+        int created = my_str_reserve(str, buf_size); //int created = my_str_reserve(str, cstr_len);??????
         if (created == -2) {
             return -2;
         }
@@ -295,6 +295,25 @@ int my_str_from_cstr(my_str *str, const char *cstr, size_t buf_size) {
     }
     return 0;
 }
+
+
+
+//int my_str_from_cstr(my_str *str, const char *cstr, size_t buf_size) {
+//    size_t cstr_len = sizeof(cstr);
+//    if (buf_size == 0) {
+//        int created = my_str_reserve(str, buf_size);
+//        if (created == -2) {
+//            return -2;
+//        }
+//    }
+//    if (0 < buf_size && buf_size < cstr_len) {
+//        return -1;
+//    }
+//    for (int i = 0; i < cstr_len; i++) {
+//        str->data[i] = cstr[i];
+//    }
+//    return 0;
+//}
 
 int my_str_append(my_str *str, const my_str *from) {//TODO: Check my_str_reserve return on mistakes
     if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)) {
@@ -313,30 +332,8 @@ int my_str_substr_cstr(const my_str *from, char *to, size_t beg, size_t end) {
     return  my_str_substr(from, to_my_str, beg, end);
 }
 
-int my_str_read_file(my_str* str, FILE* file){
-    char sym = '\0';
-    int i = 0;
-    while (sym != '\n') {
-        sym = (char)fgetc(file);
-        if (str->size_m == str->capacity_m) {
-            my_str_resize(str, str->capacity_m * 2, '\0');
-        }
-        str->data[i] = sym;
-        i++;
-    }
-    if(!ferror(file)) {
-        return 0;
-    } else {
-        return -1;
-    }
-}
 
-const char* my_str_get_cstr(my_str* str) {
-    char *c_str = str->data;
-    return c_str;
-}
-
-size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from){
+size_t my_str_find(const my_str* str, const my_str* tofind, size_t from){
     int foundChars = 0;
     size_t strIndx = 0;
     size_t tofindIndx = 0;
@@ -383,23 +380,6 @@ int my_str_cmp(const my_str* str1, const my_str* str2) {
     else { return 0; }
 }
 
-//Are the commented lines mistakes or am I wrong?
-int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
-    size_t cstr_len = sizeof(cstr);
-    if (buf_size == 0) {                             //should reserve size of Cstring not buf_size
-        int created = my_str_reserve(str, buf_size); //int created = my_str_reserve(str, cstr_len);??????
-        if (created == -2) {
-            return -2;
-        }
-    }
-    if (0 < buf_size && buf_size < cstr_len) {
-        return -1;
-    }
-    for (int i = 0; i < cstr_len; i++) {
-        str->data[i] = cstr[i];                      //*(str->data+i) = cstr[i]??????
-    }
-    return 0;
-}
 
 
 int my_str_cmp_cstr(const my_str* str1, const char* cstr2) {
