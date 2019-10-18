@@ -25,8 +25,8 @@ int my_str_substr_cstr(const my_str* from, char* to, size_t beg, size_t end); //
 int my_str_substr(const my_str* from, my_str* to, size_t beg, size_t end); // Done
 int my_str_append_cstr(my_str* str, const char* from); // Done
 int my_str_append(my_str* str, const my_str* from); // Done
-int my_str_insert_cstr(my_str* str, const char* from, size_t pos);
-int my_str_insert(my_str* str, const my_str* from, size_t pos);
+int my_str_insert_cstr(my_str* str, const char* from, size_t pos); // Done
+int my_str_insert(my_str* str, const my_str* from, size_t pos); // Done
 int my_str_insert_c(my_str* str, char c, size_t pos);// Done
 void my_str_clear(my_str* str); // Done
 int my_str_copy(const my_str* from,  my_str* to, int reserve); // Done
@@ -39,6 +39,6 @@ int my_str_empty(const my_str* str); // Done
 size_t my_str_capacity(const my_str* str); // Done
 size_t my_str_size(const my_str* str); // Done
 void my_str_free(my_str* str); // Done
-int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size); Done
+int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size); //Done
 int my_str_create(my_str* str, size_t buf_size); // Done
 #endif //STRLIB_LIBRARY_H
