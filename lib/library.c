@@ -254,15 +254,19 @@ int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
     return 0;
 }
 
-//int my_str_append(my_str* str, const my_str* from){
-//    if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)){
-//        for(int i = 0; i < my_str_size(from); i++){
-//            *(str->data + my_str_size(str) + i) = *(from->data + i);
-//        }
-//    } else{
-//        return -1;
-//    }
-//}
+int my_str_append(my_str* str, const my_str* from){//TODO: Check my_str_reserve return on mistakes
+    if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)){
+        int reserved = my_str_reserve(str, my_str_size(from) + my_str_size(str));
+        if (reserved == -2){
+            return -2;
+        }
+    }
+}
+
+int my_str_reserve(my_str_t* str, size_t buf_size) {
+
+}
+
 int my_str_read_file(my_str* str, FILE* file){
     char sym = '\0';
     int i = 0;
