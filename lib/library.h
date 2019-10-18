@@ -13,10 +13,10 @@ int my_str_write(const my_str* str, FILE* file); // Done
 int my_str_write_file(const my_str* str, FILE* file); // Done
 int my_str_read(my_str* str); // Done
 int my_str_read_file(my_str* str, FILE* file); // Done
-//size_t my_str_find_if(const my_str* str, int (*predicat)(int));
+size_t my_str_find_if(const my_str* str, int (*predicat)(int)); // Done
 size_t my_str_find_c(const my_str* str, char tofind, size_t from); // Done
 //int my_str_cmp_cstr(const my_str* str1, const char* cstr2);
-//int my_str_cmp(const my_str* str1, const my_str* str2);
+int my_str_cmp(const my_str* str1, const my_str* str2); // Done
 //size_t my_str_find(const my_str* str, const my_str* tofind, size_t from);
 int my_str_resize(my_str* str, size_t new_size, char sym); // Done
 int my_str_shrink_to_fit(my_str* str); // Done

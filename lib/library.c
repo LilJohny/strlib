@@ -20,8 +20,8 @@ int my_str_create(my_str *str, size_t buf_size) {
         return -2;
 }
 
-int my_str_getc(const my_str *str, size_t index) {
-    return *(str->data + index);
+int my_str_getc(const my_str* str, size_t index){
+    return *(str->data[index]);
 }
 
 int my_str_shrink_to_fit(my_str *str) {
@@ -120,7 +120,7 @@ void my_str_clear(my_str *str) {
 
 int my_str_write_file(const my_str *str, FILE *file) {
     for (int i = 0; i < str->size_m; ++i) {
-        int result = fprintf(file, "%c", (str->data[i]));
+        int result = fprintf(file,"%c", str->data[i]);
         if (result != 1) {
             return result;
         }
@@ -311,4 +311,100 @@ int my_str_substr_cstr(const my_str *from, char *to, size_t beg, size_t end) {
     my_str_create(to_my_str, toLength);
     my_str_from_cstr(to_my_str, to, toLength);
     return  my_str_substr(from, to_my_str, beg, end);
+}
+
+int my_str_read_file(my_str* str, FILE* file){
+    char sym = '\0';
+    int i = 0;
+    while (sym != '\n') {
+        sym = (char)fgetc(file);
+        if (str->size_m == str->capacity_m) {
+            my_str_resize(str, str->capacity_m * 2, '\0');
+        }
+        str->data[i] = sym;
+        i++;
+    }
+    if(!ferror(file)) {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
+const char* my_str_get_cstr(my_str* str) {
+    char *c_str = str->data;
+    return c_str;
+}
+
+size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from){
+    int foundChars = 0;
+    size_t strIndx = 0;
+    size_t tofindIndx = 0;
+    size_t startIndx = -1;
+
+    while (foundChars != tofind->size_m || strIndx == str->size_m) {
+
+        if (*(str->data+strIndx) == *(tofind->data+tofindIndx)) {
+            if (*(str->data+strIndx) == *(tofind->data+0)) {
+                startIndx = strIndx;
+            }
+            foundChars++;
+            tofindIndx++;
+            strIndx++;
+        }
+
+        else {
+            startIndx = -1;
+            strIndx++;
+            foundChars = 0;
+            tofindIndx = 0;
+        }
+    }
+    return startIndx;
+}
+
+
+int my_str_cmp(const my_str* str1, const my_str* str2) {
+
+    size_t indx = 0;
+    size_t smallerLen;
+
+    if (str1->size_m < str2->size_m) { smallerLen = str1->size_m; }
+    else { smallerLen = str2->size_m; }
+
+    while (indx < smallerLen) {
+        if (*(str1->data+indx) < *(str2->data+indx)) { return -1; }
+        else if (*(str1->data+indx) > *(str2->data+indx)) { return 1; }
+        else { indx++; }
+    }
+
+    if (str1->size_m < str2->size_m) { return -1;}
+    else if (str1->size_m > str2->size_m) { return 1; }
+    else { return 0; }
+}
+
+//Are the commented lines mistakes or am I wrong?
+int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
+    size_t cstr_len = sizeof(cstr);
+    if (buf_size == 0) {                             //should reserve size of Cstring not buf_size
+        int created = my_str_reserve(str, buf_size); //int created = my_str_reserve(str, cstr_len);??????
+        if (created == -2) {
+            return -2;
+        }
+    }
+    if (0 < buf_size && buf_size < cstr_len) {
+        return -1;
+    }
+    for (int i = 0; i < cstr_len; i++) {
+        str->data[i] = cstr[i];                      //*(str->data+i) = cstr[i]??????
+    }
+    return 0;
+}
+
+
+int my_str_cmp_cstr(const my_str* str1, const char* cstr2) {
+    my_str* str2;
+    int converted = my_str_from_cstr(str2, cstr2, sizeof(cstr2));
+    int result = my_str_cmp(str1, str2);
+    return result;
 }
