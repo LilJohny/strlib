@@ -88,10 +88,14 @@ START_TEST (shrink_to_fit) {
 
 }
 
-//START_TEST (resize) {
-//    char sym = '0';
-//    ck_assert_int_eq(my_str_resize(&string, 10, sym), 0);
-//}
+START_TEST (resize) {
+    char sym = '0';
+    int length = 10;
+    ck_assert_int_eq(my_str_resize(&string, length, sym), 0);
+    for(i=0; i<length; i++){
+        ck_assert_char_eq(my_str_getc(&string, i), '0');
+    }
+}
 
 START_TEST (find) {
 
