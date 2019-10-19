@@ -8,7 +8,23 @@ struct my_str {
     size_t size_m;
     char* data;
 };
-
+void *my_realloc(void *ptr, size_t oldLength, size_t newLength) {
+    if (newLength == 0) {
+        free(ptr);
+        return NULL;
+    } else if (!ptr) {
+        return malloc(newLength);
+    } else if (newLength > oldLength) {
+        void *ptrNew = malloc(newLength);
+        if (ptrNew) {
+            memcpy(ptrNew, ptr, oldLength);
+            free(ptr);
+        }
+        return ptrNew;
+    } else {
+        return ptr;
+    }
+}
 int my_str_insert_cstr(my_str* str, const char* from, size_t pos){
     if (pos> str->size_m){
         int result = my_str_resize(str, str->size_m+pos+strlen(from),' ');
@@ -40,11 +56,14 @@ int my_str_create(my_str* str, size_t buf_size) {
 
 
 int my_str_getc(const my_str* str, size_t index){
+    if(index >=str->size_m|| !str){
+        return -1;
+    }
     return str->data[index];
 }
 
 int my_str_shrink_to_fit(my_str *str) {
-    char *memory = realloc(str->data, str->size_m);
+    char *memory = my_realloc(str->data,str->capacity_m, str->size_m);
     if (memory) {
         str->data = memory;
         str->capacity_m = str->size_m;
@@ -55,7 +74,7 @@ int my_str_shrink_to_fit(my_str *str) {
 }
 
 size_t my_str_find_c(const my_str *str, char tofind, size_t from) {
-    if (from >= str->size_m) {
+    if (from < str->size_m) {
         for (size_t i = from; i < str->size_m; i++) {
             if (str->data[i] == tofind) {
                 return i;
@@ -80,7 +99,7 @@ size_t my_str_size(const my_str *str) {
 }
 
 int my_str_putc(my_str *str, size_t index, char c) {
-    if (str->size_m >= index) {
+    if (str->size_m < index) {
         return -1;
     } else {
         *(str->data + index) = c;
@@ -108,11 +127,13 @@ void my_str_free(my_str *str) {
 int my_str_popback(my_str *str) {
     if (str == NULL) {
         return -1;
-    }
-    if (str->capacity_m == 0) {
+    } else if (str->capacity_m == 0) {
         return -2;
+    } else {
+        char sym = str->data[str->size_m - 1];
+        str->size_m--;
+        return (int)sym;
     }
-    return *(str->data + str->size_m - 1);
 }
 
 int my_str_copy(const my_str *from, my_str *to, int reserve) {
@@ -157,33 +178,21 @@ int my_str_write(const my_str *str, FILE* file) {
     return 0;
 }
 
-void *my_realloc(void *ptr, size_t oldLength, size_t newLength) {
-    if (newLength == 0) {
-        free(ptr);
-        return NULL;
-    } else if (!ptr) {
-        return malloc(newLength);
-    } else if (newLength > oldLength) {
-        void *ptrNew = malloc(newLength);
-        if (ptrNew) {
-            memcpy(ptrNew, ptr, oldLength);
-            free(ptr);
-        }
-        return ptrNew;
-    } else {
-        return ptr;
-    }
-}
+
 
 int my_str_resize(my_str *str, size_t new_size, char sym) {
-    char *newMemory = my_realloc(str->data, str->capacity_m, new_size);
+    if(new_size<=str->size_m){
+        str->size_m = new_size;
+    }
+    char *newMemory = my_realloc(str->data, str->capacity_m, new_size*2);
 
     if (newMemory) {
         str->data = newMemory;
-        for (size_t i = str->capacity_m; i < new_size; i++) {
-            *(str->data + i) = sym;
+        for (size_t i = str->size_m; i < new_size; i++) {
+            str->data [i] = sym;
         }
-        str->capacity_m = new_size;
+        str->capacity_m = new_size*2;
+        str->size_m = new_size;
         return 0;
     } else {
         return -2;
@@ -216,6 +225,9 @@ int my_str_reserve(my_str *str, size_t buf_size) {
         char *ptrNew = my_realloc(str->data, str->capacity_m, buf_size);
         if (ptrNew != str->data) {
             str->data = ptrNew;
+            str->capacity_m = buf_size;
+            str->size_m = buf_size/2;
+            return 0;
         } else {
             return -1;
         }
@@ -246,10 +258,12 @@ int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     if (end > from->size_m) {
         end = from->size_m;
     }
-
+    if(to->capacity_m <= end-beg){
+        my_str_reserve(to,(end-beg)*2 );
+    }
     int j = 0;
     for (size_t i = beg; i < end; ++i) {
-        *(to->data + j) = *(from->data + i);
+        to->data[j] = from->data[i];
         j += 1;
     }
     to->size_m = end-beg;
@@ -300,12 +314,15 @@ int my_str_read_file(my_str *str, FILE *file) {
 }
 
 const char *my_str_get_cstr(my_str *str) {
+    if(str->size_m == 0){
+        return (const char *)"";
+    }
     char *c_str = malloc(sizeof(char)*str->size_m);
     for (size_t i = 0; i < str->size_m; i++)
     {
         c_str[i] = str->data[i];
     }
-    return c_str;
+    return (const char* )c_str;
 }
 
 ////Are the commented lines mistakes or am I wrong?
@@ -327,19 +344,20 @@ const char *my_str_get_cstr(my_str *str) {
 //}
 //Are the commented lines mistakes or am I wrong?
 int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
-    size_t cstr_len = sizeof(cstr);
-    if (buf_size == 0) {                             //should reserve size of Cstring not buf_size
-        int created = my_str_reserve(str, buf_size); //int created = my_str_reserve(str, cstr_len);??????
+    size_t cstr_len = strlen(cstr);
+    if (buf_size == 0) {                             
+        int created = my_str_reserve(str, buf_size); 
         if (created == -2) {
-            return -2;
+            return created;
         }
     }
     if (0 < buf_size && buf_size < cstr_len) {
         return -1;
     }
     for (int i = 0; i < cstr_len; i++) {
-        str->data[i] = cstr[i];                      //*(str->data+i) = cstr[i]??????
+        str->data[i] = cstr[i];
     }
+    str->size_m = cstr_len;
     return 0;
 }
 
@@ -368,7 +386,7 @@ int my_str_append(my_str *str, const my_str *from) {//TODO: Check my_str_reserve
         if (reserved == -2) {
             return reserved;
         } else {
-            const char * from_c_str = my_str_get_cstr(from);
+            const char * from_c_str = my_str_get_cstr((my_str* )from);
             return my_str_append_cstr(str, from_c_str);
         }
         
@@ -401,6 +419,7 @@ size_t my_str_find(const my_str* str, const my_str* tofind, size_t from){
             j++;
         }else {
             found_ind = (size_t)-1;
+            j = 0;
             i++;
         }
 
@@ -417,25 +436,51 @@ int my_str_cmp(const my_str* str1, const my_str* str2) {
     size_t indx = 0;
     size_t smallerLen;
 
-    if (str1->size_m < str2->size_m) { smallerLen = str1->size_m; }
-    else { smallerLen = str2->size_m; }
-
-    while (indx < smallerLen) {
-        if (*(str1->data+indx) < *(str2->data+indx)) { return -1; }
-        else if (*(str1->data+indx) > *(str2->data+indx)) { return 1; }
-        else { indx++; }
+    if (str1->size_m < str2->size_m) {
+        smallerLen = str1->size_m; 
+    }
+    else { 
+        smallerLen = str2->size_m; 
     }
 
-    if (str1->size_m < str2->size_m) { return -1;}
-    else if (str1->size_m > str2->size_m) { return 1; }
-    else { return 0; }
+    while (indx < smallerLen) {
+        if (str1->data[indx] < str2->data[indx]) { 
+            return -1; 
+        } else if (str1->data[indx] > str2->data[indx]) {
+            return 1; 
+        }
+        else { 
+            indx++; 
+        }
+    }
+
+    if (str1->size_m < str2->size_m) {
+        return -1;
+    } else if (str1->size_m > str2->size_m) {
+        return 1; 
+    }
+    else { 
+        return 0; 
+    }
 }
 
 
 
 int my_str_cmp_cstr(const my_str* str1, const char* cstr2) {
-    my_str* str2;
-    int converted = my_str_from_cstr(str2, cstr2, sizeof(cstr2));
-    int result = my_str_cmp(str1, str2);
+    my_str str2;
+    my_str_create(&str2,strlen(cstr2));
+    my_str_from_cstr(&str2, cstr2, sizeof(cstr2));
+    int result = my_str_cmp(str1, &str2);
     return result;
+}
+
+size_t my_str_find_if(const my_str* str, int (*predicat)(int)){
+    for (size_t i = 0; i < str->size_m; i++)
+    {
+        if((*predicat)((int)(str->data[i]))){
+            return (size_t)i;
+        }
+    }
+    
+    return (size_t)-1;
 }
