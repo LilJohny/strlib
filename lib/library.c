@@ -231,6 +231,7 @@ int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
         *(to->data + j) = *(from->data + i);
         j += 1;
     }
+    to->size_m = end-beg;
     return 0;
 }
 
