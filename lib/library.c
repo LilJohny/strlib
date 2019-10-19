@@ -9,7 +9,8 @@ struct my_str {
     char *data;
 };
 
-int my_str_create(my_str *str, size_t buf_size) {
+int my_str_create(my_str* str, size_t buf_size) {
+    //str = malloc(sizeof(int)*2);
     str->capacity_m = buf_size * 2;
     str->size_m = buf_size;
     char *memory = (char *) malloc(buf_size * 2 + 1);
@@ -172,8 +173,10 @@ int my_str_resize(my_str *str, size_t new_size, char sym) {
 }
 
 int my_str_append_cstr(my_str *str, const char *from) {
-    int fromLength = sizeof(from) / sizeof(from[0]);
-    int startPoint = str->size_m;
+    size_t fromLength = strlen(from);
+    
+    
+    size_t startPoint = str->size_m;
     if (str->size_m + fromLength >= str->capacity_m) {
         int result = my_str_resize(str, str->size_m + fromLength, ' ');
         if (result != 0) {
@@ -182,9 +185,11 @@ int my_str_append_cstr(my_str *str, const char *from) {
     }
     int j = 0;
     for (size_t i = startPoint; i < str->size_m + fromLength; ++i) {
-        str->data[j] = from[j];
+        str->data[i] = from[j];
         j++;
     }
+    printf("%d", j);
+    str->size_m += fromLength;
     return 0;
 
 }
@@ -226,10 +231,11 @@ int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     }
 
     int j = 0;
-    for (size_t i = 0; i < end; ++i) {
+    for (size_t i = beg; i < end; ++i) {
         *(to->data + j) = *(from->data + i);
         j += 1;
     }
+    to->size_m = end-beg;
     return 0;
 }
 
@@ -262,6 +268,7 @@ int my_str_read_file_delim(my_str *str, FILE *file, char delimiter) {
         i++;
     }
     if (!ferror(file)) {
+        str->size_m = i;
         return 0;
     } else {
         return -1;
@@ -274,10 +281,31 @@ int my_str_read_file(my_str *str, FILE *file) {
 }
 
 const char *my_str_get_cstr(my_str *str) {
-    char *c_str = str->data;
+    char *c_str = malloc(sizeof(char)*str->size_m);
+    for (size_t i = 0; i < str->size_m; i++)
+    {
+        c_str[i] = str->data[i];
+    }
     return c_str;
 }
 
+////Are the commented lines mistakes or am I wrong?
+//int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
+//    size_t cstr_len = sizeof(cstr);
+//    if (buf_size == 0) {                             //should reserve size of Cstring not buf_size
+//        int created = my_str_reserve(str, buf_size); //int created = my_str_reserve(str, cstr_len);??????
+//        if (created == -2) {
+//            return -2;
+//        }
+//    }
+//    if (0 < buf_size && buf_size < cstr_len) {
+//        return -1;
+//    }
+//    for (int i = 0; i < cstr_len; i++) {
+//        str->data[i] = cstr[i];
+//    }
+//    return 0;
+//}
 //Are the commented lines mistakes or am I wrong?
 int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
     size_t cstr_len = sizeof(cstr);
@@ -291,7 +319,7 @@ int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
         return -1;
     }
     for (int i = 0; i < cstr_len; i++) {
-        str->data[i] = cstr[i];
+        str->data[i] = cstr[i];                      //*(str->data+i) = cstr[i]??????
     }
     return 0;
 }
@@ -319,8 +347,12 @@ int my_str_append(my_str *str, const my_str *from) {//TODO: Check my_str_reserve
     if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)) {
         int reserved = my_str_reserve(str, my_str_size(from) + my_str_size(str));
         if (reserved == -2) {
-            return -2;
+            return reserved;
+        } else {
+            const char * from_c_str = my_str_get_cstr(from);
+            return my_str_append_cstr(str, from_c_str);
         }
+        
     }
 }
 
