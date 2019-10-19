@@ -259,10 +259,12 @@ int my_str_read_file_delim(my_str *str, FILE *file, char delimiter) {
     int i = 0;
     while (sym != delimiter) {
         sym = (char) fgetc(file);
+        if(sym==EOF){
+            break;
+        }
         if (str->size_m == str->capacity_m) {
             my_str_resize(str, str->capacity_m * 2, '\0');
         }
-
         str->data[i] = sym;
         i++;
     }
@@ -276,7 +278,7 @@ int my_str_read_file_delim(my_str *str, FILE *file, char delimiter) {
 
 
 int my_str_read_file(my_str *str, FILE *file) {
-    return my_str_read_file_delim(str, file, '\n');
+    return my_str_read_file_delim(str, file, EOF);
 }
 
 const char *my_str_get_cstr(my_str *str) {
