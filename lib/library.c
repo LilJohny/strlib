@@ -385,6 +385,9 @@ int my_str_substr_cstr(const my_str *from, char *to, size_t beg, size_t end) {
 
 
 size_t my_str_find(const my_str* str, const my_str* tofind, size_t from){
+    if(tofind->size_m>=str->size_m){
+        return (size_t)-1;
+    }
     size_t found_ind = 0;
     size_t i = 0;
     size_t j = 0;
