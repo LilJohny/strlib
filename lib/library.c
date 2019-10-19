@@ -6,20 +6,20 @@
 struct my_str {
     size_t capacity_m;
     size_t size_m;
-    char *data;
+    char* data;
 };
 
 int my_str_create(my_str* str, size_t buf_size) {
-    //str = malloc(sizeof(int)*2);
     str->capacity_m = buf_size * 2;
     str->size_m = buf_size;
-    char *memory = (char *) malloc(buf_size * 2 + 1);
+    char* memory = (char* ) malloc(buf_size * 2 + 1);
     if (memory) {
         str->data = memory;
         return 0;
     } else
         return -2;
 }
+
 
 int my_str_getc(const my_str* str, size_t index){
     return str->data[index];
@@ -188,7 +188,6 @@ int my_str_append_cstr(my_str *str, const char *from) {
         str->data[i] = from[j];
         j++;
     }
-    printf("%d", j);
     str->size_m += fromLength;
     return 0;
 
@@ -366,30 +365,27 @@ int my_str_substr_cstr(const my_str *from, char *to, size_t beg, size_t end) {
 
 
 size_t my_str_find(const my_str* str, const my_str* tofind, size_t from){
-    int foundChars = 0;
-    size_t strIndx = 0;
-    size_t tofindIndx = 0;
-    size_t startIndx = -1;
-
-    while (foundChars != tofind->size_m || strIndx == str->size_m) {
-
-        if (*(str->data+strIndx) == *(tofind->data+tofindIndx)) {
-            if (*(str->data+strIndx) == *(tofind->data+0)) {
-                startIndx = strIndx;
-            }
-            foundChars++;
-            tofindIndx++;
-            strIndx++;
+    size_t found_ind = 0;
+    size_t i = 0;
+    size_t j = 0;
+    while (j!=tofind->size_m && i!= str->size_m){
+        if(str->data[i] == tofind->data[j] && j == 0){
+            found_ind = i;
+            i++;
+            j++;
+        } else if(str->data[i] == tofind->data[j]){
+            i++;
+            j++;
+        }else {
+            found_ind = (size_t)-1;
+            i++;
         }
 
-        else {
-            startIndx = -1;
-            strIndx++;
-            foundChars = 0;
-            tofindIndx = 0;
-        }
     }
-    return startIndx;
+    if(str->size_m - found_ind < tofind->size_m){
+        found_ind = (size_t)-1;
+    }
+    return found_ind;
 }
 
 
