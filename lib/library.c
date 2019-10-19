@@ -9,6 +9,24 @@ struct my_str {
     char* data;
 };
 
+int my_str_insert_cstr(my_str* str, const char* from, size_t pos){
+    if (pos> str->size_m){
+        int result = my_str_resize(str, str->size_m+pos+strlen(from),' ');
+        if(result!=0){
+            return result;
+        }
+    }
+    for (size_t i = str->size_m-1; i >=pos ; --i) {
+        str->data[i+pos] = str->data[i];
+    }
+    int j = pos;
+    for (size_t k = 0; k < strlen((from)); ++k) {
+        str->data[j] = from[k];
+        j++;
+    }
+    return 0;
+}
+
 int my_str_create(my_str* str, size_t buf_size) {
     str->capacity_m = buf_size * 2;
     str->size_m = buf_size;
