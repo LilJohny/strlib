@@ -173,8 +173,10 @@ int my_str_resize(my_str *str, size_t new_size, char sym) {
 }
 
 int my_str_append_cstr(my_str *str, const char *from) {
-    int fromLength = sizeof(from) / sizeof(from[0]);
-    int startPoint = str->size_m;
+    size_t fromLength = strlen(from);
+    
+    
+    size_t startPoint = str->size_m;
     if (str->size_m + fromLength >= str->capacity_m) {
         int result = my_str_resize(str, str->size_m + fromLength, ' ');
         if (result != 0) {
@@ -183,9 +185,11 @@ int my_str_append_cstr(my_str *str, const char *from) {
     }
     int j = 0;
     for (size_t i = startPoint; i < str->size_m + fromLength; ++i) {
-        str->data[j] = from[j];
+        str->data[i] = from[j];
         j++;
     }
+    printf("%d", j);
+    str->size_m += fromLength;
     return 0;
 
 }
@@ -277,7 +281,11 @@ int my_str_read_file(my_str *str, FILE *file) {
 }
 
 const char *my_str_get_cstr(my_str *str) {
-    char *c_str = str->data;
+    char *c_str = malloc(sizeof(char)*str->size_m);
+    for (size_t i = 0; i < str->size_m; i++)
+    {
+        c_str[i] = str->data[i];
+    }
     return c_str;
 }
 
@@ -339,8 +347,12 @@ int my_str_append(my_str *str, const my_str *from) {//TODO: Check my_str_reserve
     if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)) {
         int reserved = my_str_reserve(str, my_str_size(from) + my_str_size(str));
         if (reserved == -2) {
-            return -2;
+            return reserved;
+        } else {
+            const char * from_c_str = my_str_get_cstr(from);
+            return my_str_append_cstr(str, from_c_str);
         }
+        
     }
 }
 
