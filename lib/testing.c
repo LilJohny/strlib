@@ -14,10 +14,11 @@ void teardown(void) {
 START_TEST (size) {
     // Max napisav, a ne slavik. Prost git zlamavs'a i slavik zapushiv
     my_str_resize(&myString, 66, '0');
-    ck_assert_eq(my_str_size(), 66);
+    ck_assert_eq(my_str_size(), 0);
 }
 START_TEST (capacity) {
-
+    my_str_resize(&myString, 66, '0');
+    ck_assert_eq(my_str_size(), 66);
 }
 
 START_TEST (empty) {
