@@ -188,7 +188,6 @@ int my_str_append_cstr(my_str *str, const char *from) {
         str->data[i] = from[j];
         j++;
     }
-    printf("%d", j);
     str->size_m += fromLength;
     return 0;
 
