@@ -24,7 +24,7 @@ int my_str_shrink_to_fit(my_str* str); // Done
 //int my_str_substr_cstr(const my_str* from, char* to, size_t beg, size_t end);
 int my_str_substr(const my_str* from, my_str* to, size_t beg, size_t end); // Done
 int my_str_append_cstr(my_str* str, const char* from); // Done
-//int my_str_append(my_str* str, const my_str* from);
+int my_str_append(my_str* str, const my_str* from);
 //int my_str_insert_cstr(my_str* str, const char* from, size_t pos);
 //int my_str_insert(my_str* str, const my_str* from, size_t pos);
 //int my_str_insert_c(my_str* str, char c, size_t pos);

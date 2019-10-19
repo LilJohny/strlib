@@ -227,7 +227,7 @@ int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     }
 
     int j = 0;
-    for (size_t i = 0; i < end; ++i) {
+    for (size_t i = beg; i < end; ++i) {
         *(to->data + j) = *(from->data + i);
         j += 1;
     }
