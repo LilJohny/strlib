@@ -9,7 +9,8 @@ struct my_str {
     char *data;
 };
 
-int my_str_create(my_str *str, size_t buf_size) {
+int my_str_create(my_str* str, size_t buf_size) {
+    //str = malloc(sizeof(int)*2);
     str->capacity_m = buf_size * 2;
     str->size_m = buf_size;
     char *memory = (char *) malloc(buf_size * 2 + 1);
@@ -262,6 +263,7 @@ int my_str_read_file_delim(my_str *str, FILE *file, char delimiter) {
         i++;
     }
     if (!ferror(file)) {
+        str->size_m = i;
         return 0;
     } else {
         return -1;
@@ -278,6 +280,23 @@ const char *my_str_get_cstr(my_str *str) {
     return c_str;
 }
 
+////Are the commented lines mistakes or am I wrong?
+//int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
+//    size_t cstr_len = sizeof(cstr);
+//    if (buf_size == 0) {                             //should reserve size of Cstring not buf_size
+//        int created = my_str_reserve(str, buf_size); //int created = my_str_reserve(str, cstr_len);??????
+//        if (created == -2) {
+//            return -2;
+//        }
+//    }
+//    if (0 < buf_size && buf_size < cstr_len) {
+//        return -1;
+//    }
+//    for (int i = 0; i < cstr_len; i++) {
+//        str->data[i] = cstr[i];
+//    }
+//    return 0;
+//}
 //Are the commented lines mistakes or am I wrong?
 int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
     size_t cstr_len = sizeof(cstr);
@@ -291,7 +310,7 @@ int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
         return -1;
     }
     for (int i = 0; i < cstr_len; i++) {
-        str->data[i] = cstr[i];
+        str->data[i] = cstr[i];                      //*(str->data+i) = cstr[i]??????
     }
     return 0;
 }
