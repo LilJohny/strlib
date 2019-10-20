@@ -201,8 +201,8 @@ int my_str_resize(my_str *str, size_t new_size, char sym) {
 
 int my_str_append_cstr(my_str *str, const char *from) {
     size_t fromLength = strlen(from);
-    
-    
+
+
     size_t startPoint = str->size_m;
     if (str->size_m + fromLength >= str->capacity_m) {
         int result = my_str_resize(str, str->size_m + fromLength, ' ');
@@ -220,13 +220,13 @@ int my_str_append_cstr(my_str *str, const char *from) {
 
 }
 
+
 int my_str_reserve(my_str *str, size_t buf_size) {
     if (buf_size > str->capacity_m) {
         char *ptrNew = my_realloc(str->data, str->capacity_m, buf_size);
         if (ptrNew != str->data) {
             str->data = ptrNew;
             str->capacity_m = buf_size;
-            str->size_m = buf_size/2;
             return 0;
         } else {
             return -1;
@@ -235,21 +235,14 @@ int my_str_reserve(my_str *str, size_t buf_size) {
 }
 
 int my_str_insert_c(my_str *str, char c, size_t pos) {
-    size_t needed_capacity = str->size_m > pos ? str->size_m : pos;
-    if (pos <= str->size_m) {
-        my_str_reserve(str, needed_capacity * 2);
-    } else {
-        my_str_resize(str, needed_capacity * 2, c);
-        return 0;
-    }
-    while (pos <= str->size_m) {
-        char next = *(str->data + pos);
-        *(str->data + pos) = c;
-        c = next;
-        pos++;
-    }
+    char c_str [1];
+    c_str[0] = c;
+    return my_str_insert_cstr(str, c_str, pos);
 }
-
+int my_str_insert(my_str* str, const my_str* from, size_t pos){
+    const char * from_cstr = my_str_get_cstr( (my_str *)from);
+    return my_str_insert_cstr(str, from_cstr, pos);
+}
 
 int my_str_substr(const my_str *from, my_str *to, size_t beg, size_t end) {
     if (beg > from->size_m) {
@@ -381,7 +374,7 @@ int my_str_from_cstr(my_str* str, const char* cstr, size_t buf_size){
 //}
 
 int my_str_append(my_str *str, const my_str *from) {//TODO: Check my_str_reserve return on mistakes
-    if (my_str_capacity(str) >= my_str_size(from) + my_str_size(str)) {
+    if (my_str_capacity(str) <= my_str_size(from) + my_str_size(str)) {
         int reserved = my_str_reserve(str, my_str_size(from) + my_str_size(str));
         if (reserved == -2) {
             return reserved;
@@ -389,7 +382,6 @@ int my_str_append(my_str *str, const my_str *from) {//TODO: Check my_str_reserve
             const char * from_c_str = my_str_get_cstr((my_str* )from);
             return my_str_append_cstr(str, from_c_str);
         }
-        
     }
 }
 

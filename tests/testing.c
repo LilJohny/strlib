@@ -316,7 +316,7 @@ void substr_Success() {
     my_str_create(&resString, 3);
     int res = my_str_substr(&mainString, &resString, 4, 7);
     assert(res == 0);
-    assert(strcmp(my_str_get_cstr(&resString),"act")==0);
+    assert(strcmp(my_str_get_cstr(&resString), "act") == 0);
 }
 
 void substr_EndOutOFStr() {
@@ -344,6 +344,97 @@ void substr_ExpandBuffer() {
     assert(resString.size_m == 3);
 }
 
+void append_Success() {
+    my_str firstPart;
+    my_str_create(&firstPart, 5);
+    my_str_from_cstr(&firstPart, "Hello", 5);
+
+    my_str toAdd;
+    my_str_create(&toAdd, 5);
+    my_str_from_cstr(&toAdd, "World", 5);
+
+    int res = my_str_append(&firstPart, &toAdd);
+
+    assert(strcmp(my_str_get_cstr(&firstPart), "HelloWorld") == 0);
+    assert(res == 0);
+}
+
+void append_ExpandBufferSmall() {
+    my_str firstPart;
+    my_str_create(&firstPart, 5);
+    my_str_from_cstr(&firstPart, "Hello", 5);
+
+    my_str toAdd;
+    my_str_create(&toAdd, 15);
+    my_str_from_cstr(&toAdd, "WorldHelloWorld", 15);
+
+    int res = my_str_append(&firstPart, &toAdd);
+
+    assert(strcmp(my_str_get_cstr(&firstPart), "HelloWorldHelloWorld") == 0);
+    assert(res == 0);
+}
+
+void append_ExpandBufferBig() {
+    my_str firstPart;
+    my_str_create(&firstPart, 1);
+    my_str_from_cstr(&firstPart, "H", 1);
+
+    my_str toAdd;
+    my_str_create(&toAdd, 19);
+    my_str_from_cstr(&toAdd, "elloWorldHelloWorld", 19);
+
+    int res = my_str_append(&firstPart, &toAdd);
+
+    assert(strcmp(my_str_get_cstr(&firstPart), "HelloWorldHelloWorld") == 0);
+    assert(res == 0);
+}
+
+void append_cstr_Success() {
+    my_str firstPart;
+    my_str_create(&firstPart, 5);
+    my_str_from_cstr(&firstPart, "Hello", 5);
+
+    int res = my_str_append_cstr(&firstPart, "World");
+
+    assert(strcmp(my_str_get_cstr(&firstPart), "HelloWorld") == 0);
+    assert(res == 0);
+}
+
+void append_cstr_ExpandBufferSmall() {
+    my_str firstPart;
+    my_str_create(&firstPart, 5);
+    my_str_from_cstr(&firstPart, "Hello", 5);
+
+    int res = my_str_append_cstr(&firstPart, "WorldHelloWorld");
+
+    assert(strcmp(my_str_get_cstr(&firstPart), "HelloWorldHelloWorld") == 0);
+    assert(res == 0);
+}
+
+void append_cstr_ExpandBufferBig() {
+    my_str firstPart;
+    my_str_create(&firstPart, 1);
+    my_str_from_cstr(&firstPart, "H", 1);
+
+    int res = my_str_append_cstr(&firstPart, "elloWorldHelloWorld");
+
+    assert(strcmp(my_str_get_cstr(&firstPart), "HelloWorldHelloWorld") == 0);
+    assert(res == 0);
+}
+
+
+
+void insert_c_ExpandBuffer() {
+    my_str toInsert;
+    my_str_create(&toInsert, 5);
+    my_str_from_cstr(&toInsert, "abcde", 5);
+
+    int res = my_str_insert_c(&toInsert, 'O', 20);
+
+    assert(res == 0);
+    assert(my_str_getc(&toInsert, 20) == (int) 'O');
+}
+
 int main() {
     void (*test_arr[])() = {size, capacity, empty_True, empty_False, empty_Resized, get_cstr, get_cstr_Empty,
                             getc_OutOfString, getc_ZeroChar, getc_ZeroIndex, getch, cmp_cstr_ShortBigger,
@@ -352,8 +443,10 @@ int main() {
                             popback_Success, pushback_NullPointer, pushback_Success, putc_Failure, putc_Success,
                             find_c_NotStartFailure, find_c_NotStartSuccess, find_c_Failure, find_c_Success,
                             find_if_Failure, find_if_FirstSuccess, find_if_Success, shrink_to_fit, substr_ExpandBuffer,
-                            substr_BegOutOFStr, substr_EndOutOFStr, substr_Success};
-    for (int i = 0; i < 41; ++i) {
+                            substr_BegOutOFStr, substr_EndOutOFStr, substr_Success, append_ExpandBufferBig,
+                            append_ExpandBufferSmall, append_Success, append_cstr_ExpandBufferBig,
+                            append_cstr_ExpandBufferSmall, append_cstr_Success, insert_c_ExpandBuffer};
+    for (int i = 0; i < 48; ++i) {
         setup();
         (*test_arr[i])();
         teardown();
